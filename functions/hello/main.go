@@ -57,7 +57,7 @@ func main() {
 			Bucket:       aws.String("mdwn-web"),            // Required
 			Body:         bytes.NewReader([]byte(env.Text)), // Required
 			Key:          aws.String(messageId + ".txt"),    // Required
-			ContentType:  aws.String("text/plain"),
+			ContentType:  aws.String("text/plain; charset=UTF-8"),
 			ACL:          aws.String("public-read"),
 			StorageClass: aws.String("REDUCED_REDUNDANCY"),
 		}
