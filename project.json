@@ -1,0 +1,10 @@
+{
+  "name": "mdwnemail",
+  "description": "Email to Markdown",
+  "memory": 128,
+  "profile": "emailmdwn",
+  "timeout": 5,
+  "role": "arn:aws:iam::407461997746:role/mdwnemail_lambda_function",
+  "region": "us-west-2",
+  "environment": {}
+}
