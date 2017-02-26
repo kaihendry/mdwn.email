@@ -21,8 +21,8 @@ func main() {
 		// fmt.Fprintln(os.Stderr, event.Records[0].SNS.Message)
 
 		messageId := gjson.Get(event.Records[0].SNS.Message, "mail.messageId").String()
-		from := gjson.Get(event.Records[0].SNS.Message, "mail.source").String()
 		subject := gjson.Get(event.Records[0].SNS.Message, "mail.commonHeaders.subject").String()
+		returnPath := gjson.Get(event.Records[0].SNS.Message, "mail.commonHeaders.returnPath").String()
 		fmt.Fprintln(os.Stderr, messageId)
 
 		sess := session.Must(session.NewSession())
@@ -56,7 +56,7 @@ func main() {
 		putparams := &s3.PutObjectInput{
 			Bucket:       aws.String("mdwn-web"),            // Required
 			Body:         bytes.NewReader([]byte(env.Text)), // Required
-			Key:          aws.String(messageId + ".txt"),    // Required
+			Key:          aws.String("txt/" + messageId),    // Required
 			ContentType:  aws.String("text/plain; charset=UTF-8"),
 			ACL:          aws.String("public-read"),
 			StorageClass: aws.String("REDUCED_REDUNDANCY"),
@@ -74,13 +74,13 @@ func main() {
 		mailparams := &ses.SendEmailInput{
 			Destination: &ses.Destination{
 				ToAddresses: []*string{
-					aws.String(from),
+					aws.String(returnPath),
 				},
 			},
 			Message: &ses.Message{
 				Body: &ses.Body{
 					Text: &ses.Content{
-						Data: aws.String("https://mdwn.email/" + messageId + ".txt"),
+						Data: aws.String("https://mdwn.email/txt/" + messageId),
 					},
 				},
 				Subject: &ses.Content{
